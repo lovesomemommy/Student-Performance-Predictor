@@ -1,16 +1,38 @@
 name: Weekly Report
 
 on:
+  schedule:
+    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 jobs:
-  deploy:
+  generate-report:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create report.html
-        run: echo "<h1>Report works!</h1>" > report.html
-      - name: Deploy
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Generate report
+        run: |
+          python -c "
+import pandas as pd
+from src.predictor import train_model
+df = pd.read_csv('data/sample.csv')
+model = train_model(df)
+report = '''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {len(df)} students.</p></body></html>'''
+with open('report.html', 'w', encoding='utf-8') as f:
+    f.write(report)
+"
+      - name: Save report
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: report.html
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
