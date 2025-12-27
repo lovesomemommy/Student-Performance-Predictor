@@ -3,7 +3,7 @@ name: Weekly Report
 on:
   schedule:
     - cron: '0 0 * * 1'  # Каждый понедельник в 00:00 UTC
-  workflow_dispatch:     # Можно запустить вручную
+  workflow_dispatch:
 
 jobs:
   generate-report:
@@ -15,7 +15,8 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
       - name: Generate report
         run: |
           python -c "
@@ -23,7 +24,7 @@ import pandas as pd
 from src.predictor import train_model
 df = pd.read_csv('data/sample.csv')
 model = train_model(df)
-report = f'''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {len(df)} students.</p></body></html>'''
+report = '''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {} students.</p></body></html>'''.format(len(df))
 with open('report.html', 'w', encoding='utf-8') as f:
     f.write(report)
 "
