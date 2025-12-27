@@ -5,13 +5,13 @@ from sklearn.ensemble import RandomForestClassifier
 def prepare_features(df):
     """Подготавливает признаки для модели."""
     df = df.copy()
-    df['avg_grade'] = df[['grade1', 'grade2', 'grade3']].mean(axis=1)
-    df['attendance_rate'] = df['attended_lectures'] / df['total_lectures']
-    df['late_ratio'] = df['late_assignments'] / df['total_assignments']
-    return df[['avg_grade', 'attendance_rate', 'late_ratio']]
+    df["avg_grade"] = df[["grade1", "grade2", "grade3"]].mean(axis=1)
+    df["attendance_rate"] = df["attended_lectures"] / df["total_lectures"]
+    df["late_ratio"] = df["late_assignments"] / df["total_assignments"]
+    return df[["avg_grade", "attendance_rate", "late_ratio"]]
 
 
-def train_model(df, target_col='at_risk'):
+def train_model(df, target_col="at_risk"):
     """Обучает модель предсказания риска отчисления."""
     X = prepare_features(df)
     y = df[target_col]

@@ -10,7 +10,7 @@ def main():
     # Получаем путь к текущему файлу main.py
     current_file_path = Path(__file__).resolve()
     # Строим путь к файлу sample.csv
-    data_file = current_file_path.parent.parent / 'data' / 'sample.csv'
+    data_file = current_file_path.parent.parent / "data" / "sample.csv"
 
     print(f"Ищу файл: {data_file}")
     if not data_file.exists():
@@ -26,9 +26,13 @@ def main():
 
     # Пример предсказания
     student = {
-        'grade1': 40, 'grade2': 50, 'grade3': 45,
-        'attended_lectures': 6, 'total_lectures': 20,
-        'late_assignments': 3, 'total_assignments': 4
+        "grade1": 40,
+        "grade2": 50,
+        "grade3": 45,
+        "attended_lectures": 6,
+        "total_lectures": 20,
+        "late_assignments": 3,
+        "total_assignments": 4,
     }
 
     is_at_risk, probability = predict_risk(model, student)
