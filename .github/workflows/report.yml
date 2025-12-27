@@ -25,8 +25,10 @@ from src.predictor import train_model
 df = pd.read_csv('data/sample.csv')
 model = train_model(df)
 report = '''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {} students.</p></body></html>'''.format(len(df))
+print("Создаю файл report.html...")
 with open('report.html', 'w', encoding='utf-8') as f:
     f.write(report)
+    print("Файл report.html создан!")
 "
       - name: Save report
         uses: actions/upload-artifact@v4
