@@ -144,6 +144,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Environment variables
+.env
+.env.local
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -205,3 +209,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Ignore all CSV/JSON in data/, except sample.csv
+data/*.csv
+data/*.json
+!data/sample.csv
