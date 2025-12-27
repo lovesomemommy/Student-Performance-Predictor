@@ -1,40 +1,44 @@
-name: Weekly Report
+name: Weekly Model Report
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1'  # Каждый понедельник в полночь
   workflow_dispatch:
 
 jobs:
   generate-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Generate report
         run: |
-          python -c "
-import pandas as pd
-from src.predictor import train_model
-df = pd.read_csv('data/sample.csv')
-model = train_model(df)
-report = '''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {len(df)} students.</p></body></html>'''
-with open('report.html', 'w', encoding='utf-8') as f:
-    f.write(report)
-"
-      - name: Save report
+          pip install -r requirements.txt
+          pip install matplotlib pandas scikit-learn
+          
+      - name: Generate report
+        id: generate
+        run: python scripts/generate_report.py
+        
+      - name: Upload report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: report
-          path: report.html
+          name: weekly-report
+          path: |
+            report.html
+            report.json
+            model_metrics.txt
+          
       - name: Deploy to GitHub Pages
+        if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          publish_files: report.html
+          publish_dir: ./reports  # Специальная папка для отчетов
+          keep_files: false
