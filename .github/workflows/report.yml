@@ -1,9 +1,9 @@
 name: Weekly Report
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
+  workflow_dispatch:
 
 jobs:
   generate-report:
@@ -18,16 +18,15 @@ jobs:
         run: pip install -r requirements.txt
       - name: Generate report
         run: |
-          python - << 'EOF'
+          python -c "
 import pandas as pd
 from src.predictor import train_model
 df = pd.read_csv('data/sample.csv')
 model = train_model(df)
-html = f"""<html><body><h1>📊 Weekly Risk Report</h1><p>Trained on {len(df)} students.</p></body></html>"""
+report = '''<html><body><h1>Weekly Risk Report</h1><p>Model trained on {len(df)} students.</p></body></html>'''
 with open('report.html', 'w', encoding='utf-8') as f:
-    f.write(html)
-print("✅ report.html created")
-EOF
+    f.write(report)
+"
       - name: Save report
         uses: actions/upload-artifact@v4
         with:
